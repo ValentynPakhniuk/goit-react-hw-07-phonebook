@@ -1,16 +1,17 @@
 import { Button } from 'components/Button/Button.styled';
 import { Box, Form } from './ContainerForm.styled';
 import { useDispatch } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import { addContactsThunk } from 'redux/operations';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
 
   const handleClick = event => {
     event.preventDefault();
-    const form = event.target.elements;
-
-    dispatch(addContact(form.name.value, form.number.value));
+    const form = event.target;
+    const name = form.elements.name.value;
+    const number = form.elements.number.value;
+    dispatch(addContactsThunk({ name, number }));
   };
 
   return (
@@ -36,7 +37,9 @@ export const ContactForm = () => {
             required
           />
         </div>
-        <Button type="submit">Add contact</Button>
+        <Button type="submit">
+          Add contact
+        </Button>
       </Box>
     </Form>
   );
