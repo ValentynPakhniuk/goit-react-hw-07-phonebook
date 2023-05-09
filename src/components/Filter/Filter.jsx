@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { FilterBox } from './FilterBox.styled';
 import { setFilterSearchValue } from 'redux/filterSlice';
-import { getFilterSearchValue } from 'redux/selectors';
+import { selectFilterSearchValue } from 'redux/selectors';
 
 export const Filter = () => {
-  const filterSearchValue = useSelector(getFilterSearchValue);
+  const filterSearchValue = useSelector(selectFilterSearchValue);
   const dispatch = useDispatch();
   const handleFilter = e => dispatch(setFilterSearchValue(e.target.value));
 
