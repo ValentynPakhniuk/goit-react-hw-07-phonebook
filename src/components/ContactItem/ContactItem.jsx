@@ -1,26 +1,34 @@
 import { Button } from 'components/Button/Button.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Item } from './ContactItem.styled';
 import { deleteContactsThunk } from 'redux/operations';
+import { useState } from 'react';
+import { selectIsLoading } from 'redux/selectors';
 
-export const ContactItem = ({ contact }) => {
+export const ContactItem = ({ contact: { name, number, id } }) => {
+  const [contactId, setContactId] = useState(null);
+  const isLoading = useSelector(selectIsLoading);
   const dispatch = useDispatch();
-  const handleDelete = () => dispatch(deleteContactsThunk(contact.id));
+  const handleDelete = () => {
+    dispatch(deleteContactsThunk(id));
+    setContactId(id);
+  };
   return (
-      <Item key={contact.id}>
-        <div>
-          <p>
-            {contact.name}: {contact.number}
-          </p>
-          <Button
-            type="button"
-            onClick={() => handleDelete(contact.id)}
-          >
-            Delete
-          </Button>
-        </div>
-      </Item>
+    <Item key={id}>
+      <div>
+        <p>
+          {name}: {number}
+        </p>
+        <Button
+          type="button"
+          onClick={() => handleDelete()}
+          disabled={isLoading && contactId === id}
+        >
+          Delete
+        </Button>
+      </div>
+    </Item>
   );
 };
 
