@@ -7,7 +7,7 @@ import {
 
 const arrThunk = [addContactsThunk, deleteContactsThunk, fetchContactsThunk];
 
-const fn = type => arrThunk.map(el => el[type]);
+const createThunk = type => arrThunk.map(el => el[type]);
 
 const listContacts = {
   items: [],
@@ -15,10 +15,10 @@ const listContacts = {
   error: null,
 };
 
-const handlePending = (state, action) => {
+const handlePending = state => {
   state.isLoading = true;
 };
-const handleFulfilled = (state, action) => {
+const handleFulfilled = state => {
   state.isLoading = false;
   state.error = null;
 };
@@ -26,14 +26,7 @@ const handleFulfilledFetchContacts = (state, action) => {
   state.items = action.payload;
 };
 const handleFulfilledAddContacts = (state, action) => {
-  const isContactExists = state.items.some(
-    contact => contact.name === action.payload.name
-  );
-  if (isContactExists) {
-    return alert(`${action.payload.name} is already in contacts.`);
-  } else {
-    state.items.push(action.payload);
-  }
+  state.items.push(action.payload);
 };
 const handleFulfilledDeleteContacts = (state, action) => {
   const index = state.items.findIndex(contact => contact.id === action.payload);
@@ -52,9 +45,9 @@ export const contactsSlice = createSlice({
       .addCase(fetchContactsThunk.fulfilled, handleFulfilledFetchContacts)
       .addCase(addContactsThunk.fulfilled, handleFulfilledAddContacts)
       .addCase(deleteContactsThunk.fulfilled, handleFulfilledDeleteContacts)
-      .addMatcher(isAnyOf(...fn('pending')), handlePending)
-      .addMatcher(isAnyOf(...fn('fulfilled')), handleFulfilled)
-      .addMatcher(isAnyOf(...fn('rejected')), handleRejected);
+      .addMatcher(isAnyOf(...createThunk('pending')), handlePending)
+      .addMatcher(isAnyOf(...createThunk('fulfilled')), handleFulfilled)
+      .addMatcher(isAnyOf(...createThunk('rejected')), handleRejected);
   },
 });
 
